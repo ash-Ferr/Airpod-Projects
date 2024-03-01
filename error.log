@@ -1,0 +1,127 @@
+INFO:root:Program Has Started
+INFO:root:Print Manager Thread Started
+INFO:root:End of Loop: #1
+INFO:root:End of Loop: #2
+INFO:root:End of Loop: #3
+INFO:root:End of Loop: #4
+INFO:root:End of Loop: #5
+INFO:root:End of Loop: #6
+INFO:root:End of Loop: #7
+INFO:root:End of Loop: #8
+INFO:root:End of Loop: #9
+INFO:root:End of Loop: #10
+INFO:root:End of Loop: #11
+INFO:root:End of Loop: #12
+INFO:root:End of Loop: #13
+INFO:root:End of Loop: #14
+INFO:root:End of Loop: #15
+INFO:root:End of Loop: #16
+INFO:root:End of Loop: #17
+INFO:root:Quit Initiated
+INFO:root:stop_threads self.stop_event is set
+INFO:root:End of Loop: #18
+INFO:root:Stop event set, exiting loop
+INFO:root:USB Thread Joined
+INFO:root:Print Thread Joined
+INFO:root:print manager stop event set
+INFO:root:Data Queue Joined
+INFO:root:excel thread stop event set
+INFO:root:excel thread joined
+INFO:root:Closing the GUI
+INFO:root:Closing Logging Handler
+INFO:root:Program Has Started
+INFO:root:Program Has Started
+INFO:root:Program Has Started
+INFO:root:Quit Initiated
+INFO:root:stop_threads self.stop_event is set
+INFO:root:Quit Initiated
+INFO:root:stop_threads self.stop_event is set
+INFO:root:Program Has Started
+INFO:root:Program Has Started
+INFO:root:Program Has Started
+INFO:root:Program Has Started
+INFO:root:Program Has Started
+INFO:root:Quit Initiated
+INFO:root:stop_threads self.stop_event is set
+INFO:root:Program Has Started
+INFO:root:Quit Initiated
+INFO:root:stop_threads self.stop_event is set
+INFO:root:Quit Initiated
+INFO:root:stop_threads self.stop_event is set
+INFO:root:Program Has Started
+INFO:root:Quit Initiated
+INFO:root:stop_threads self.stop_event is set
+INFO:root:USB Thread Joined
+INFO:root:Print Thread Joined
+INFO:root:print manager stop event set
+INFO:root:Data Queue Joined
+INFO:root:excel thread stop event set
+INFO:root:excel thread joined
+INFO:root:Closing the GUI
+INFO:root:Closing Logging Handler
+INFO:root:Program Has Started
+INFO:root:Program Has Started
+INFO:root:Quit Initiated
+INFO:root:stop_threads self.stop_event is set
+INFO:root:USB Thread Joined
+INFO:root:Print Thread Joined
+INFO:root:print manager stop event set
+INFO:root:Data Queue Joined
+INFO:root:excel thread stop event set
+INFO:root:excel thread joined
+INFO:root:Closing the GUI
+INFO:root:Closing Logging Handler
+INFO:root:Program Has Started
+INFO:root:Program Has Started
+INFO:root:Program Has Started
+INFO:root:Program Has Started
+INFO:root:Program Has Started
+INFO:root:Program Has Started
+INFO:root:Print Manager Thread Started
+INFO:root:End of Loop: #1
+INFO:root:End of Loop: #2
+INFO:root:End of Loop: #3
+INFO:root:End of Loop: #4
+INFO:root:End of Loop: #5
+INFO:root:End of Loop: #6
+INFO:root:End of Loop: #7
+INFO:root:End of Loop: #8
+INFO:root:End of Loop: #9
+INFO:root:End of Loop: #10
+INFO:root:End of Loop: #11
+INFO:root:End of Loop: #12
+INFO:root:End of Loop: #13
+INFO:root:End of Loop: #14
+INFO:root:End of Loop: #15
+INFO:root:End of Loop: #16
+INFO:root:End of Loop: #17
+INFO:root:End of Loop: #18
+INFO:root:End of Loop: #19
+INFO:root:End of Loop: #20
+INFO:root:End of Loop: #21
+INFO:root:End of Loop: #22
+INFO:root:End of Loop: #23
+INFO:root:End of Loop: #24
+INFO:root:End of Loop: #25
+INFO:root:End of Loop: #26
+INFO:root:End of Loop: #27
+INFO:root:End of Loop: #28
+INFO:root:End of Loop: #29
+INFO:root:End of Loop: #30
+INFO:root:End of Loop: #31
+INFO:root:End of Loop: #32
+INFO:root:Quit Initiated
+INFO:root:stop_threads self.stop_event is set
+INFO:root:USB Thread Joined
+INFO:root:Print Thread Joined
+INFO:root:print manager stop event set
+INFO:root:Data Queue Joined
+INFO:root:excel thread stop event set
+INFO:root:excel thread is alive
+INFO:root:excel thread joined
+INFO:root:Closing the GUI
+INFO:root:Closing Logging Handler
+INFO:root:Program Has Started
+INFO:root:Print Manager Thread Started
+INFO:root:Program Has Started
+INFO:root:Print Manager Thread Started
