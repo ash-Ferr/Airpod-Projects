@@ -4,6 +4,7 @@
 #Saves Serial,Model,and pass fail to excel worksheet
 
 from io import BytesIO
+import libusb
 import libusb_package
 import time
 import usb.core
@@ -346,9 +347,8 @@ def detect_new_device(previous_serial=None,stop_event = None):
     while not (stop_event.is_set()):
         start_time = time.time()
         try:
-            devices = libusb_package.find(find_all=True)
+            devices = list(libusb_package.find(find_all=True))
         except Exception as watdafu:
-            pass
             print(f'there has been a {watdafu}')
             input('pause here,press enter\n')
             return None,None
@@ -373,11 +373,11 @@ def detect_new_device(previous_serial=None,stop_event = None):
             except usb.core.USBError as er:
                 pass
                 #logging.error(f'ERROR: {er}')
-            finally: libusb_package.libusb_unref_device(dev)
+
         end_time = time.time()
         execution_time = end_time - start_time
         print(execution_time)
-        return None,None
+    return None,None
 
 #Can Import as Library to access the USBPrinterManager and OptionsDialog classes, and the device detection function
 #the Main function of the program, initialize the class objects and enter the mainloop of our GUI
