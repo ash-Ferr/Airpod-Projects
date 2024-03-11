@@ -51,7 +51,7 @@ def create_error_log():
             f.write('')
 atexit.register(logging.shutdown)
 class USBPrinterManager:
-    def __init__(self,update_serial_callback):
+    def __init__(self,update_serial_callback, options_dialog):
         self.serial_number = None #Serial Number of the Air POD connected
         self.model_id = None   #Model Number of the Air POD connected
         self.model_name = None #Name of the AirPod Case Model ex.  A2700,A2190...
@@ -67,13 +67,17 @@ class USBPrinterManager:
         self.loop_count = 0 # give a count of the process loop.
         self.usb_thread=None # Initialize 
         self.print_thread=None# Initialize
-    
+        self.root = options_dialog.root
+     
     #Polls the USB host for New Serial Number, Sends the enw serial to the print thread, and updates
         #the last Serial Number used.  
-    def usb_detection_thread(self):
+    def usb_detection_thread(self,root):
         previous_serial = None
         
         while not self.stop_event.is_set():
+            #check to see if the main application is still running
+            if not self.root.winfo_exists():  sys.exit()
+            #Pause the resource
             time.sleep(.5)
             new_serial,model_id = detect_new_device(previous_serial,self.stop_event)
             if new_serial is not None: #Check if a new serial number is detected
@@ -104,6 +108,8 @@ class USBPrinterManager:
     #When a new serial number is available, convert to zpl and send command to printer
     def print_thread(self):
         while not self.stop_event.is_set():
+            #Check main application status
+            if not self.root.winfo_exists():  sys.exit()
             with self.serial_lock:
                 if self.serial_number is not None:
                     self.format_data()
@@ -116,7 +122,7 @@ class USBPrinterManager:
 
     #start 2 threads for the detecting usb and printing labels
     def start_threads(self):
-        self.usb_thread = threading.Thread(target=self.usb_detection_thread)
+        self.usb_thread = threading.Thread(target=self.usb_detection_thread,args=(self.root,))
         self.print_thread = threading.Thread(target=self.print_thread)
         self.usb_thread.start()
         self.print_thread.start()
@@ -164,7 +170,7 @@ class OptionsDialog:
         self.excel_thread = threading.Thread(target = self.save_to_excel)
         #Excel Thread stop event
         self.excel_thread_stop_event = threading.Event()
-        
+    
         #Create the GUI
         self.root = Tk()
         self.root.geometry("300x300") #Size of the window in pixels
@@ -181,23 +187,25 @@ class OptionsDialog:
         self.container.grid_columnconfigure(0,weight=1,minsize=300)
         self.container.grid_columnconfigure(1,weight=1,minsize=300)
         
-        #self.frame.place(in_=self.root, anchor ="c",relx = .5,rely = .5)
+        #StringVar for serial Number
+        self.serial_number=StringVar()
         #Create and Place the buttons on the Window
         self.start_button = Button(self.frame1, text="Start", command=self.start_threads)
         self.quit_button = Button(self.frame1, text="Quit", command=self.quit_program)
-        #Add a button to save the serial number and inspection result to an excel file
-        self.save_button = Button(self.frame1, text = "Save", command = self.add_to_queue)
         #Add a text field to show the Serial Number
-        self.serial_entry = Entry(self.frame1)
+        self.serial_entry = Entry(self.frame1,textvariable=self.serial_number)
         #Add a text field for the model name
         self.model_entry = Entry(self.frame1)
+        #Create a label for the barcode in Frame 2
+        self.barcode_label = Label(self.frame2)
+        self.barcode_label.pack()
         #Add Labels for serial entry and model entry
         self.serial_label = Label(self.frame1,text="Serial Number")
         self.model_label = Label(self.frame1 ,text="Model Name")
         #Add a checkbox to indicate whether the device passed inspection
         self.passed_var = IntVar()
         self.passed_checkbox = Checkbutton(self.frame1, text = "Passed inspection", variable = self.passed_var)
-        # Create a canvas for the excel save bindicator
+        # Create a canvas for the excel save indicator
         self.indicator = Canvas(self.frame1, width=50, height=50)
         
         self.indicator.create_rectangle(0, 0, 50, 50, fill='red')
@@ -216,7 +224,13 @@ class OptionsDialog:
         self.frame1.grid_rowconfigure(5)
         #self.passed_checkbox.grid(row=5, column=1)
 
-    def create_barcode(self, serial_number):
+        #stringVar for serial Number
+        self.serial_number.trace_add('write',self.create_barcode)
+        #Modify the 
+        self.root.protocol("WM_DELETE_WINDOW",self.quit_program)
+    def create_barcode(self, *args):
+        #Get Serial
+        serial_number = self.serial_entry.get()
         # Generate the barcode
         barcode = Code128(serial_number, writer=ImageWriter())
         barcode.save('barcode')
@@ -391,6 +405,6 @@ if __name__ == "__main__":
         options_dialog.model_entry.delete(0,'end')
         options_dialog.model_entry.insert(0,model_name)
     #Create instance of USBPrinterManager     
-    printer_manager = USBPrinterManager(update_serial)
+    printer_manager = USBPrinterManager(update_serial, options_dialog)
     options_dialog.root.after(100,options_dialog.check_update_gui)
     options_dialog.root.mainloop()
