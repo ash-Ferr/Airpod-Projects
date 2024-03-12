@@ -173,7 +173,7 @@ class OptionsDialog:
     
         #Create the GUI
         self.root = Tk()
-        self.root.geometry("300x300") #Size of the window in pixels
+        self.root.geometry("900x300") #Size of the window in pixels
         self.root.title("AirPod Serial Extractor") #title of the window
         self.root.attributes("-topmost",True) # Keep the window with the quit button on top of all other windowed objects
         
@@ -185,7 +185,7 @@ class OptionsDialog:
         self.frame2=Frame(self.container,bg='blue')
         self.frame2.grid(row=0,column=1,sticky='nsew')
         self.container.grid_columnconfigure(0,weight=1,minsize=300)
-        self.container.grid_columnconfigure(1,weight=1,minsize=300)
+        self.container.grid_columnconfigure(1,weight=1,minsize=600)
         
         #StringVar for serial Number
         self.serial_number=StringVar()
@@ -228,6 +228,24 @@ class OptionsDialog:
         self.serial_number.trace_add('write',self.create_barcode)
         #Modify the 
         self.root.protocol("WM_DELETE_WINDOW",self.quit_program)
+        
+        
+        #Call the test barcode
+        barcode_text = "Test-Test-Test"
+        barcode = Code128(barcode_text, writer=ImageWriter())
+        barcode.save('barcode')
+
+        # Open the barcode image
+        image = Image.open('barcode.png')
+
+        # Convert the image to PhotoImage format
+        photo = ImageTk.PhotoImage(image)
+
+        #Update self.barcode_label
+        self.barcode_label.config(image=photo)
+        self.barcode_label.image=photo
+        
+        
     def create_barcode(self, *args):
         #Get Serial
         serial_number = self.serial_entry.get()
@@ -241,10 +259,11 @@ class OptionsDialog:
         # Convert the image to PhotoImage format
         photo = ImageTk.PhotoImage(image)
 
-        # Create a label and add the image to it
-        label = Label(self.frame2, image=photo)
-        label.image = photo  # Keep a reference to the image to prevent it from being garbage collected
-        label.pack()
+        #Update self.barcode_label
+        self.barcode_label.config(image=photo)
+        self.barcode_label.image=photo
+        
+
 
     def flash_indicator(self):
         #Change the indicator color back to red
