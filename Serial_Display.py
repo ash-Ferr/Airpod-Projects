@@ -1,7 +1,7 @@
 #Automated Air Pod Serial Retrieval and Label Printing
 #Ashley Ferrell  Ashley.Ferrell@assurant.com
 #Detects new usb devices, if the new device is an Air Pod Print a SerialNumber Label
-#Saves Serial,Model,and pass fail to excel worksheet
+
 
 from io import BytesIO
 import libusb
@@ -166,11 +166,7 @@ class OptionsDialog:
         self.data_queue = queue.Queue()
         #GUI Update Queue
         self.gui_queue = queue.Queue()
-        #Create Excel Thread
-        self.excel_thread = threading.Thread(target = self.save_to_excel)
-        #Excel Thread stop event
-        self.excel_thread_stop_event = threading.Event()
-    
+        
         #Create the GUI
         self.root = Tk()
         self.root.geometry("900x300") #Size of the window in pixels
@@ -205,10 +201,6 @@ class OptionsDialog:
         #Add a checkbox to indicate whether the device passed inspection
         self.passed_var = IntVar()
         self.passed_checkbox = Checkbutton(self.frame1, text = "Passed inspection", variable = self.passed_var)
-        # Create a canvas for the excel save indicator
-        self.indicator = Canvas(self.frame1, width=50, height=50)
-        
-        self.indicator.create_rectangle(0, 0, 50, 50, fill='red')
 
         #Pack all of the Widgets
         self.start_button.grid(row=0, column=0)
@@ -226,7 +218,7 @@ class OptionsDialog:
 
         #stringVar for serial Number
         self.serial_number.trace_add('write',self.create_barcode)
-        #Modify the 
+        #Modify the Delete Window Protocol
         self.root.protocol("WM_DELETE_WINDOW",self.quit_program)
         
         
@@ -301,8 +293,6 @@ class OptionsDialog:
     def start_threads(self):
         #Begin the threads containing the Device Lookup and Serial Label Print
         printer_manager.start_threads()
-        #Start Excel upload Thread
-        self.excel_thread.start()
         logging.info("Print Manager Thread Started")
 
     #function for the quit button
@@ -311,16 +301,9 @@ class OptionsDialog:
         #call the stop_threads function of the printer_manager object
         printer_manager.stop_threads()
         logging.info("print manager stop event set")
-        #ensure all data in queue is converted to the excel file
+        
         self.data_queue.join()
         logging.info("Data Queue Joined")
-        #stop the excel thread
-        self.excel_thread_stop_event.set()
-        logging.info("excel thread stop event set")
-        while self.excel_thread.is_alive():
-            logging.info("excel thread is alive")
-            self.excel_thread.join(timeout = 5.0)
-        logging.info("excel thread joined")
         #destroy the root window
         logging.info("Closing the GUI")
         self.root.destroy()
@@ -334,46 +317,6 @@ class OptionsDialog:
         #Exit the program
         print("System Exit")
         sys.exit()
-
-    #function to save the serial and result in excel
-    def save_to_excel(self):
-        while not self.excel_thread_stop_event.is_set():
-            try:
-                #Wait for data in the queue
-                serial_number, model_name, passed_inspection = self.data_queue.get_nowait()
-                #Create a dataframe with the data
-                df = pd.DataFrame({"Serial Number": [serial_number],"Model Name":[model_name], "Passed Inspection": [passed_inspection]})
-
-                #Check for the Excel File
-                if os.path.exists(self.file_path):
-                    mode = "a" #append if the file exists
-                    if_sheet_exists = "overlay"
-                    engine = 'openpyxl'
-                    book = load_workbook(self.file_path)
-                    writer = pd.ExcelWriter(self.file_path, engine='openpyxl')
-                    writer.book = book
-                    writer.sheets = {ws.title: ws for ws in book.worksheets}
-                    startrow = writer.sheets['Sheet1'].max_row
-                else:
-                    mode = "w" #Create the file if no exist
-                    if_sheet_exists = None
-                    engine = 'xlsxwriter'
-                    startrow = 0
-                #Append to the existing excel file( or create a new file if it does not exist)
-                try:
-                    with pd.ExcelWriter(self.file_path,if_sheet_exists=if_sheet_exists, engine = engine,mode = mode) as writer: # pylint: disable =abstract-class-instantiated
-                        df.to_excel(writer, index = True, header = True, startrow = startrow)
-                    logging.info("Excel Entry Created")
-                    #remove the entry from queue
-                    self.data_queue.task_done()
-                    #Add a message to the UI UPDATE Queue
-                    self.gui_queue.put('update')
-                    print("Excel Entry Added")
-                except Exception as e:
-                    print(f'{e} has occurrrredddd')
-            except queue.Empty:
-                #print("No Excel Entry Added")
-                continue
 
 #Function to detect new Air Pod Connections
 def detect_new_device(previous_serial=None,stop_event = None):
