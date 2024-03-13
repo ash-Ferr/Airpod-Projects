@@ -92,7 +92,7 @@ class USBPrinterManager:
                 previous_serial = new_serial
             self.loop_count+=1
             loop_count= self.loop_count
-            print(self.loop_count)
+            #print(self.loop_count)
             logging.info(f'End of Loop: #{loop_count}')
         logging.info('Stop event set, exiting loop')            
     def format_data(self):
@@ -156,12 +156,8 @@ class USBPrinterManager:
 
 #User Interface:  Includes a start and stop button.      
 class OptionsDialog:
-    def __init__(self,file_path ='C:/air_pod_research/AirPod_Serial_Reciept.xlsx'):
+    def __init__(self):
         #Check to ensure file tree exists create the path if not
-        directory = os.path.dirname(file_path)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        self.file_path = file_path #Default path is set
         #data queue for the communication between Threads
         self.data_queue = queue.Queue()
         #GUI Update Queue
@@ -352,7 +348,7 @@ def detect_new_device(previous_serial=None,stop_event = None):
 
         end_time = time.time()
         execution_time = end_time - start_time
-        print(execution_time)
+        #print(execution_time)
     return None,None
 
 #Can Import as Library to access the USBPrinterManager and OptionsDialog classes, and the device detection function
