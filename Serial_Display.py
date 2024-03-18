@@ -165,7 +165,7 @@ class OptionsDialog:
         
         #Create the GUI
         self.root = Tk()
-        self.root.geometry("900x300") #Size of the window in pixels
+        self.root.geometry("800x300") #Size of the window in pixels
         self.root.title("AirPod Serial Extractor") #title of the window
         self.root.attributes("-topmost",True) # Keep the window with the quit button on top of all other windowed objects
         
@@ -176,7 +176,7 @@ class OptionsDialog:
         self.frame1.grid(row=0,column=0,sticky= 'nsew')
         self.frame2=Frame(self.container,bg='blue')
         self.frame2.grid(row=0,column=1,sticky='nsew')
-        self.container.grid_columnconfigure(0,weight=1,minsize=300)
+        self.container.grid_columnconfigure(0,weight=1,minsize=100)
         self.container.grid_columnconfigure(1,weight=1,minsize=600)
         
         #StringVar for serial Number
@@ -186,29 +186,38 @@ class OptionsDialog:
         self.quit_button = Button(self.frame1, text="Quit", command=self.quit_program)
         #Add a text field to show the Serial Number
         self.serial_entry = Entry(self.frame1,textvariable=self.serial_number)
+        
+        ######MODEL REMOVED FROM VERSION
         #Add a text field for the model name
-        self.model_entry = Entry(self.frame1)
+        #self.model_entry = Entry(self.frame1)
+        
         #Create a label for the barcode in Frame 2
         self.barcode_label = Label(self.frame2)
         self.barcode_label.pack()
         #Add Labels for serial entry and model entry
         self.serial_label = Label(self.frame1,text="Serial Number")
-        self.model_label = Label(self.frame1 ,text="Model Name")
+        
+        ######MODEL REMOVED FROM VERSION
+        #self.model_label = Label(self.frame1 ,text="Model Name")
+        
         #Add a checkbox to indicate whether the device passed inspection
         self.passed_var = IntVar()
         self.passed_checkbox = Checkbutton(self.frame1, text = "Passed inspection", variable = self.passed_var)
 
         #Pack all of the Widgets
         self.start_button.grid(row=0, column=0)
-        self.quit_button.grid(row=0, column=3)
+        self.quit_button.grid(row=0, column=1)
         #self.save_button.grid(row=0, column=1)
         #self.indicator.grid(row=0, column=2)
         self.frame1.grid_rowconfigure(1,minsize = 50)
         self.serial_label.grid(row=2, column=0)
         self.serial_entry.grid(row=2, column=1)
         self.frame1.grid_rowconfigure(3, minsize = 20)
-        self.model_label.grid(row=4, column=0)
-        self.model_entry.grid(row=4, column=1)
+        
+        #####MODEL REMOVED FROM VERSION
+        #self.model_label.grid(row=4, column=0)
+        #self.model_entry.grid(row=4, column=1)
+        
         self.frame1.grid_rowconfigure(5)
         #self.passed_checkbox.grid(row=5, column=1)
 
@@ -360,8 +369,10 @@ if __name__ == "__main__":
     def update_serial(serial_number,model_name):
         options_dialog.serial_entry.delete(0,"end")
         options_dialog.serial_entry.insert(0, serial_number)
-        options_dialog.model_entry.delete(0,'end')
-        options_dialog.model_entry.insert(0,model_name)
+        
+        ######Remove Model From Version
+        #options_dialog.model_entry.delete(0,'end')
+        #options_dialog.model_entry.insert(0,model_name)
     #Create instance of USBPrinterManager     
     printer_manager = USBPrinterManager(update_serial, options_dialog)
     options_dialog.root.after(100,options_dialog.check_update_gui)
